@@ -1,7 +1,7 @@
 package com.example.foodrecipes.di
 
 import android.content.Context
-import com.example.foodrecipes.BaseApplication
+import com.example.foodrecipes.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
