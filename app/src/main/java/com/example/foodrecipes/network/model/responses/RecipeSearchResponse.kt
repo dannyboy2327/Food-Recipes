@@ -1,13 +1,13 @@
 package com.example.foodrecipes.network.model.responses
 
-import com.example.foodrecipes.network.model.RecipeNetworkEntity
+import com.example.foodrecipes.network.model.RecipeDto
 import com.google.gson.annotations.SerializedName
 
-class RecipeSearchResponse(
+data class RecipeSearchResponse(
     @SerializedName("count")
     var count: Int,
 
     @SerializedName("results")
-    var recipes: List<RecipeNetworkEntity>
+    var recipes: List<RecipeDto>
 ) {
 }
