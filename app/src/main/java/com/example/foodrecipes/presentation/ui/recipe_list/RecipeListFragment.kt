@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.foodrecipes.presentation.components.RecipeCard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +26,17 @@ class RecipeListFragment: Fragment() {
             setContent {
 
                 val recipes = viewModel.recipes.value
+
+                LazyColumn{
+                    itemsIndexed(
+                        items = recipes
+                    ) { index, recipe ->
+                        RecipeCard(
+                            recipe = recipe,
+                            onClick = {}
+                        )
+                    }
+                }
             }
         }
     }
