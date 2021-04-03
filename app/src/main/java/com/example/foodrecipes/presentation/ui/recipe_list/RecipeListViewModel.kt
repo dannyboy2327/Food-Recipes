@@ -8,6 +8,7 @@ import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -19,6 +20,12 @@ class RecipeListViewModel @Inject constructor(
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
 
+    val query = mutableStateOf("")
+
+    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
+
+    var categoryScrollPosition = 0
+
     init {
         newSearch()
     }
@@ -28,9 +35,23 @@ class RecipeListViewModel @Inject constructor(
             val result = repository.search(
                 token = token,
                 page = 1,
-                query = "chicken"
+                query = query.value
             )
             recipes.value = result
         }
+    }
+
+    fun onQueryChanged(query: String) {
+        this.query.value = query
+    }
+
+    fun onSelectedCategoryChanged(category: String) {
+        val newCategory = getFoodCategory(category)
+        selectedCategory.value = newCategory
+        onQueryChanged(category)
+    }
+
+    fun onChangeCategoryScrollPosition(position: Int) {
+        categoryScrollPosition = position
     }
 }
