@@ -33,9 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.foodrecipes.presentation.components.FoodCategoryChip
-import com.example.foodrecipes.presentation.components.RecipeCard
-import com.example.foodrecipes.presentation.components.SearchAppBar
+import com.example.foodrecipes.presentation.components.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -59,6 +57,8 @@ class RecipeListFragment: Fragment() {
 
                 val selectedCategory = viewModel.selectedCategory.value
 
+                val loading = viewModel.loading.value
+
                 Column {
                     
                     SearchAppBar(
@@ -70,15 +70,23 @@ class RecipeListFragment: Fragment() {
                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                         onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
-                    LazyColumn{
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(
-                                recipe = recipe,
-                                onClick = {}
-                            )
+
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                    ){
+                        LazyColumn{
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(
+                                    recipe = recipe,
+                                    onClick = {}
+                                )
+                            }
                         }
+
+                        CircularIndeterminateProgressBar(isDisplayed =
+                        loading)
                     }
                 }
             }
