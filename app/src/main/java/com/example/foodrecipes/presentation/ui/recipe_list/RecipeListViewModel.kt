@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.http.Query
 import javax.inject.Inject
@@ -26,18 +27,39 @@ class RecipeListViewModel @Inject constructor(
 
     var categoryScrollPosition = 0
 
+    val loading = mutableStateOf(false)
+
     init {
         newSearch()
     }
 
     fun newSearch() {
         viewModelScope.launch {
+
+            loading.value = true
+
+            resetSearchState()
+
+            delay(2000)
+
             val result = repository.search(
                 token = token,
                 page = 1,
                 query = query.value
             )
             recipes.value = result
+            loading.value = false
+        }
+    }
+
+    private fun clearSelectedCategory() {
+        selectedCategory.value = null
+    }
+
+    private fun resetSearchState() {
+        recipes.value = listOf()
+        if (selectedCategory.value?.value != query.value) {
+            clearSelectedCategory()
         }
     }
 
