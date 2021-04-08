@@ -41,6 +41,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.example.foodrecipes.presentation.BaseApplication
 import com.example.foodrecipes.presentation.components.*
 import com.example.foodrecipes.presentation.components.util.SnackbarController
@@ -118,37 +119,18 @@ class RecipeListFragment: Fragment() {
                             scaffoldState.snackbarHostState
                         }
                     ){
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = MaterialTheme.colors.surface)
-                        ){
-                            LazyColumn{
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, recipe ->
-                                    viewModel.onChangeRecipeScrollPosition(index)
-                                    if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                        viewModel.onTriggerEvent(NextPageEvent)
-                                    }
-                                    RecipeCard(
-                                        recipe = recipe,
-                                        onClick = {}
-                                    )
-                                }
-                            }
-
-                            CircularIndeterminateProgressBar(isDisplayed =
-                            loading)
-                            DefaultSnackbar(
-                                snackbarHostState = scaffoldState.snackbarHostState,
-                                onDismiss = {
-                                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                                },
-                                modifier = Modifier.
-                                        align(Alignment.BottomCenter)
-                            )
-                        }
+                        RecipeList(
+                            recipes = recipes,
+                            loading = loading,
+                            onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
+                            page = page,
+                            onNextPage = {
+                                viewModel.onTriggerEvent(NextPageEvent)
+                            },
+                            scaffoldState = scaffoldState,
+                            snackbarController = snackbarController,
+                            navController = findNavController(),
+                        )
                     }
                 }
             }
