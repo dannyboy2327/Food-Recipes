@@ -20,19 +20,20 @@ import androidx.constraintlayout.compose.ConstraintSet
 
 @Composable
 fun CircularIndeterminateProgressBar(
-    isDisplayed: Boolean
+    isDisplayed: Boolean,
+    verticalBias: Float
 ) {
     if (isDisplayed) {
         ConstraintLayout(
                 modifier = Modifier.fillMaxSize(),
         ) {
             val progressBar = createRef()
-            val topGuideline = createGuidelineFromTop(0.3f)
+            val topBias = createGuidelineFromTop(verticalBias)
 
             CircularProgressIndicator(
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier.constrainAs(progressBar) {
-                    top.linkTo(topGuideline)
+                    top.linkTo(topBias)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
