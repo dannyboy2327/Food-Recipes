@@ -45,6 +45,8 @@ import com.example.foodrecipes.presentation.BaseApplication
 import com.example.foodrecipes.presentation.components.*
 import com.example.foodrecipes.presentation.components.util.SnackbarController
 import com.example.foodrecipes.presentation.theme.AppTheme
+import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListEvent.NewSearchEvent
+import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListEvent.NextPageEvent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -98,8 +100,8 @@ class RecipeListFragment: Fragment() {
                                                 actionLabel = "Hide",
                                             )
                                         }
-                                    } else {
-                                        viewModel::newSearch
+                                    } else run {
+                                        viewModel.onTriggerEvent(NewSearchEvent)
                                     }
                                 },
                                 scrollPosition = viewModel.categoryScrollPosition,
@@ -127,7 +129,7 @@ class RecipeListFragment: Fragment() {
                                 ) { index, recipe ->
                                     viewModel.onChangeRecipeScrollPosition(index)
                                     if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                        viewModel.nextPage()
+                                        viewModel.onTriggerEvent(NextPageEvent)
                                     }
                                     RecipeCard(
                                         recipe = recipe,
