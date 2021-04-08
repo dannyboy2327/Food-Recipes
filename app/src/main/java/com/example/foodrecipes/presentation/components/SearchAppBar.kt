@@ -72,7 +72,7 @@ fun SearchAppBar(
                         onExecuteSearch()
                         keyboardController?.hideSoftwareKeyboard()
                     }),
-                    textStyle = MaterialTheme.typography.button,
+                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
                 )
                 ConstraintLayout(
