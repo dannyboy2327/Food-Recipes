@@ -80,6 +80,8 @@ class RecipeListFragment: Fragment() {
 
                     val loading = viewModel.loading.value
 
+                    val page = viewModel.page.value
+
                     val scaffoldState = rememberScaffoldState()
 
                     Scaffold(
@@ -123,6 +125,10 @@ class RecipeListFragment: Fragment() {
                                 itemsIndexed(
                                     items = recipes
                                 ) { index, recipe ->
+                                    viewModel.onChangeRecipeScrollPosition(index)
+                                    if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                                        viewModel.nextPage()
+                                    }
                                     RecipeCard(
                                         recipe = recipe,
                                         onClick = {}
