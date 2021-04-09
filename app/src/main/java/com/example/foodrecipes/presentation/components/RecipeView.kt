@@ -17,8 +17,6 @@ import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.util.DEFAULT_RECIPE_IMAGE
 import com.example.foodrecipes.util.loadPicture
 
-const val IMAGE_HEIGHT = 260
-
 @Composable
 fun RecipeView(
     recipe: Recipe
