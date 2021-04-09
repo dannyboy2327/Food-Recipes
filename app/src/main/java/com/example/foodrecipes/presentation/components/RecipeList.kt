@@ -11,6 +11,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foodrecipes.R
 import com.example.foodrecipes.domain.model.Recipe
@@ -35,33 +36,39 @@ fun RecipeList(
             .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
     ){
-        LazyColumn{
-            itemsIndexed(
-                items = recipes
-            ) { index, recipe ->
-                onChangeRecipeScrollPosition(index)
-                if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                    onNextPage(RecipeListEvent.NextPageEvent)
-                }
-                RecipeCard(
-                    recipe = recipe,
-                    onClick = {
-                        if (recipe.id != null) {
-                            val bundle = Bundle()
-                            bundle.putInt("recipeId", recipe.id)
-                            navController.navigate(R.id.action_recipeListFragment_to_recipeFragment,
-                                bundle)
-                        } else {
-                            snackbarController.getScope().launch {
-                                snackbarController.showSnackbar(
-                                    scaffoldState = scaffoldState,
-                                    message = "Recipe Error",
-                                    actionLabel = "Ok"
-                                )
+        if (loading && recipes.isEmpty()) {
+            LoadingRecipeListShimmer(imageHeight = 250.dp)
+        } else if (recipes.isEmpty()) {
+            NothingHere()
+        } else {
+            LazyColumn{
+                itemsIndexed(
+                    items = recipes
+                ) { index, recipe ->
+                    onChangeRecipeScrollPosition(index)
+                    if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                        onNextPage(RecipeListEvent.NextPageEvent)
+                    }
+                    RecipeCard(
+                        recipe = recipe,
+                        onClick = {
+                            if (recipe.id != null) {
+                                val bundle = Bundle()
+                                bundle.putInt("recipeId", recipe.id)
+                                navController.navigate(R.id.action_recipeListFragment_to_recipeFragment,
+                                    bundle)
+                            } else {
+                                snackbarController.getScope().launch {
+                                    snackbarController.showSnackbar(
+                                        scaffoldState = scaffoldState,
+                                        message = "Recipe Error",
+                                        actionLabel = "Ok"
+                                    )
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
