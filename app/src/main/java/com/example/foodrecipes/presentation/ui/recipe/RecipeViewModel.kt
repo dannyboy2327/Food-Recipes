@@ -30,6 +30,8 @@ class RecipeViewModel @Inject constructor(
 
     val loading = mutableStateOf(false)
 
+    val onLoad: MutableState<Boolean> = mutableStateOf(false)
+
     init {
         // Restore if process dies
         state.get<Int>(STATE_KEY_RECIPE)?.let { recipeId ->
