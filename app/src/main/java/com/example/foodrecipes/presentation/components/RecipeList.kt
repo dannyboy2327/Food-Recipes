@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import com.example.foodrecipes.R
 import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.presentation.components.util.SnackbarController
+import com.example.foodrecipes.presentation.navigation.Screen
 import com.example.foodrecipes.presentation.ui.recipe_list.PAGE_SIZE
 import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListEvent
 import kotlinx.coroutines.launch
@@ -26,14 +27,11 @@ fun RecipeList(
     loading: Boolean,
     onChangeRecipeScrollPosition: (Int) -> Unit,
     page: Int,
-    onNextPage: (RecipeListEvent) -> Unit,
-    scaffoldState: ScaffoldState,
-    snackbarController: SnackbarController,
-    navController: NavController,
+    onTriggerNextPage: () -> Unit,
+    onNavigateToRecipeDetailScreen: (String) -> Unit,
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
     ){
         if (loading && recipes.isEmpty()) {
@@ -47,25 +45,13 @@ fun RecipeList(
                 ) { index, recipe ->
                     onChangeRecipeScrollPosition(index)
                     if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                        onNextPage(RecipeListEvent.NextPageEvent)
+                        onTriggerNextPage()
                     }
                     RecipeCard(
                         recipe = recipe,
                         onClick = {
-                            if (recipe.id != null) {
-                                val bundle = Bundle()
-                                bundle.putInt("recipeId", recipe.id)
-                                navController.navigate(R.id.action_recipeListFragment_to_recipeFragment,
-                                    bundle)
-                            } else {
-                                snackbarController.getScope().launch {
-                                    snackbarController.showSnackbar(
-                                        scaffoldState = scaffoldState,
-                                        message = "Recipe Error",
-                                        actionLabel = "Ok"
-                                    )
-                                }
-                            }
+                            val route = Screen.RecipeDetail.route + "/${recipe.id}"
+                            onNavigateToRecipeDetailScreen(route)
                         }
                     )
                 }
