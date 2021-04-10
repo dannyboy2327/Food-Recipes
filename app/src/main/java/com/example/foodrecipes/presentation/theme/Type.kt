@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.foodrecipes.R
-import com.example.foodrecipes.ui.theme.Typography
 
 private val QuickSand = FontFamily(
     Font(R.font.quicksand_light, FontWeight.W300),
