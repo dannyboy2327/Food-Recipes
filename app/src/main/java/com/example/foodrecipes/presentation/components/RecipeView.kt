@@ -34,7 +34,7 @@ fun RecipeView(
             image?.let{ img ->
                 Image(
                     bitmap = img.asImageBitmap(),
-                    contentDescription = recipe.description,
+                    contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(IMAGE_HEIGHT.dp),

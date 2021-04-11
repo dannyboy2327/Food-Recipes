@@ -6,13 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigator
 import com.example.foodrecipes.domain.model.Recipe
+import com.example.foodrecipes.interactors.recipe.GetRecipe
 import com.example.foodrecipes.presentation.ui.recipe.RecipeEvent.GetRecipeEvent
-import com.example.foodrecipes.repository.RecipeRepository
 import com.example.foodrecipes.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,7 +21,7 @@ const val STATE_KEY_RECIPE = "state.key.recipeId"
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
-    private val recipeRepository: RecipeRepository,
+    private val getRecipe: GetRecipe,
     @Named("auth_token") private val token: String,
     private val state: SavedStateHandle,
     ): ViewModel() {
@@ -55,17 +55,19 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRecipe(id: Int) {
-        loading.value = true
+    private fun getRecipe(id: Int) {
+        getRecipe.execute(id, token).onEach { dataState ->
+            loading.value = dataState.loading
 
-        // Simulate network delay
-        delay(1000)
+            dataState.data?.let { data ->
+                recipe.value = data
+                state.set(STATE_KEY_RECIPE, data.id)
+            }
 
-        val recipe = recipeRepository.get(token = token, id = id)
-        this.recipe.value = recipe
+            dataState.error?.let { error ->
+                Log.e(TAG, "getRecipe: $error")
+            }
 
-        state.set(STATE_KEY_RECIPE, recipe.id)
-
-        loading.value = false
+        }.launchIn(viewModelScope)
     }
 }
