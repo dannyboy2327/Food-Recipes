@@ -54,4 +54,12 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
         }
         return list
     }
+
+    fun fromEntityList(initial: List<RecipeEntity>): List<Recipe>{
+        return initial.map { mapToDomainModel(it) }
+    }
+
+    fun toEntityList(initial: List<Recipe>): List<RecipeEntity>{
+        return initial.map { mapFromDomainModel(it) }
+    }
 }
