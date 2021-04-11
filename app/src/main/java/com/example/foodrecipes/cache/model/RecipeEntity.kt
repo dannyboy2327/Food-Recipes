@@ -26,7 +26,7 @@ data class RecipeEntity(
     var sourceUrl: String,
 
     @ColumnInfo(name = "ingredients")
-    var ingredients: String,
+    var ingredients: String = "",
 
     @ColumnInfo(name = "date_added")
     var dateAdded: Long,
@@ -34,6 +34,6 @@ data class RecipeEntity(
     @ColumnInfo(name = "date_updated")
     var dateUpdated: Long,
 
-    @ColumnInfo(name = "date_refreshed")
-    var dateRefreshed: Long,
+    @ColumnInfo(name = "date_cached")
+    var dateCached: Long,
 )
