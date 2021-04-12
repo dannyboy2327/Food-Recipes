@@ -10,6 +10,7 @@ import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.interactors.recipe_list.RestoreRecipes
 import com.example.foodrecipes.interactors.recipe_list.SearchRecipes
 import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListEvent.*
+import com.example.foodrecipes.presentation.ui.util.DialogQueue
 import com.example.foodrecipes.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -47,6 +48,8 @@ class RecipeListViewModel @Inject constructor(
     val page = mutableStateOf(1)
 
     var recipeListScrollPosition = 0
+
+    val dialogQueue = DialogQueue()
 
     init {
         savedStateHandle.get<Int>(STATE_KEY_PAGE)?.let { p ->
@@ -101,8 +104,7 @@ class RecipeListViewModel @Inject constructor(
             }
 
             dataState.error?.let { error ->
-                Log.e(TAG, "restoreState: $error", )
-                //TODO("Handle Error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope)
@@ -126,8 +128,7 @@ class RecipeListViewModel @Inject constructor(
             }
             
             dataState.error?.let { error ->
-                Log.e(TAG, "newSearch: $error", )
-                //TODO("Handle Error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope)
@@ -154,8 +155,7 @@ class RecipeListViewModel @Inject constructor(
                     }
 
                     dataState.error?.let { error ->
-                        Log.e(TAG, "nextPage: $error", )
-                        //TODO("Handle Error")
+                        dialogQueue.appendErrorMessage("Error", error)
                     }
 
                 }.launchIn(viewModelScope)
@@ -164,7 +164,7 @@ class RecipeListViewModel @Inject constructor(
     }
 
     /**
-     *  Append new recipes to teh current list of recipes
+     *  Append new recipes to the current list of recipes
      */
     private fun appendRecipes(recipes: List<Recipe>) {
         val current = ArrayList(this.recipes.value)

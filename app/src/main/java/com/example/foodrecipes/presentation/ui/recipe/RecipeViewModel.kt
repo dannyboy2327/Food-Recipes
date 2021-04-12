@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.interactors.recipe.GetRecipe
 import com.example.foodrecipes.presentation.ui.recipe.RecipeEvent.GetRecipeEvent
+import com.example.foodrecipes.presentation.ui.util.DialogQueue
 import com.example.foodrecipes.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -31,6 +32,8 @@ class RecipeViewModel @Inject constructor(
     val loading = mutableStateOf(false)
 
     val onLoad: MutableState<Boolean> = mutableStateOf(false)
+
+    val dialogQueue = DialogQueue()
 
     init {
         // Restore if process dies
@@ -65,7 +68,7 @@ class RecipeViewModel @Inject constructor(
             }
 
             dataState.error?.let { error ->
-                Log.e(TAG, "getRecipe: $error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope)
