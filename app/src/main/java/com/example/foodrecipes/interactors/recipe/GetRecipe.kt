@@ -22,7 +22,8 @@ class GetRecipe(
 
     fun execute(
         recipeId: Int,
-        token: String
+        token: String,
+        isNetworkAvailable: Boolean,
     ): Flow<DataState<Recipe>> = flow {
         try {
             emit(DataState.loading<Recipe>())
@@ -34,11 +35,14 @@ class GetRecipe(
             if (recipe != null) {
                 emit(DataState.success(recipe))
             } else {
-                val networkRecipe = getRecipeFromNetwork(token, recipeId)
 
-                recipeDao.insertRecipe(
-                    entityMapper.mapFromDomainModel(networkRecipe)
-                )
+                if (isNetworkAvailable) {
+                    val networkRecipe = getRecipeFromNetwork(token, recipeId)
+
+                    recipeDao.insertRecipe(
+                        entityMapper.mapFromDomainModel(networkRecipe)
+                    )
+                }
 
                 recipe = getRecipeFromCache(recipeId)
 
