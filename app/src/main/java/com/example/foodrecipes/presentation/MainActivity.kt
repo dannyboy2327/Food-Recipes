@@ -1,6 +1,8 @@
 package com.example.foodrecipes.presentation
 
+
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -14,10 +16,26 @@ import com.example.foodrecipes.presentation.ui.recipe.RecipeDetailScreen
 import com.example.foodrecipes.presentation.ui.recipe.RecipeViewModel
 import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListScreen
 import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListViewModel
+import com.example.foodrecipes.presentation.util.ConnectivityManager
+import com.example.foodrecipes.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
+
+    override fun onStart() {
+        super.onStart()
+        connectivityManager.registerConnectionObserver(lifecycleOwner = this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        connectivityManager.unregisterConnectionObserver(lifecycleOwner = this)
+    }
 
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                     val viewModel: RecipeListViewModel = viewModel("RecipeListViewModel", factory)
                     RecipeListScreen(
                         isDarkTheme = (application as BaseApplication).isDark.value,
+                        isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
                         onToggleTheme = { (application as BaseApplication)::toggleLightTheme },
                         onNavigateToRecipeDetailScreen = navController::navigate,
                         viewModel = viewModel
@@ -49,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                     val viewModel: RecipeViewModel = viewModel("RecipeDetailViewModel", factory)
                     RecipeDetailScreen(
                         isDarkTheme = (application as BaseApplication).isDark.value,
+                        isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
                         recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel
                     )
