@@ -10,6 +10,7 @@ import com.example.foodrecipes.domain.model.Recipe
 import com.example.foodrecipes.interactors.recipe.GetRecipe
 import com.example.foodrecipes.presentation.ui.recipe.RecipeEvent.GetRecipeEvent
 import com.example.foodrecipes.presentation.ui.util.DialogQueue
+import com.example.foodrecipes.presentation.util.ConnectivityManager
 import com.example.foodrecipes.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -23,6 +24,7 @@ const val STATE_KEY_RECIPE = "state.key.recipeId"
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val getRecipe: GetRecipe,
+    private val connectivityManager: ConnectivityManager,
     @Named("auth_token") private val token: String,
     private val state: SavedStateHandle,
     ): ViewModel() {
@@ -59,7 +61,11 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun getRecipe(id: Int) {
-        getRecipe.execute(id, token).onEach { dataState ->
+        getRecipe.execute(
+            recipeId = id,
+            token = token,
+            isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
+        ).onEach { dataState ->
             loading.value = dataState.loading
 
             dataState.data?.let { data ->

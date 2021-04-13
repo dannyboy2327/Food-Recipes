@@ -18,6 +18,7 @@ import com.example.foodrecipes.util.TAG
 @Composable
 fun RecipeDetailScreen(
     isDarkTheme: Boolean,
+    isNetworkAvailable: Boolean,
     recipeId: Int?,
     viewModel: RecipeViewModel
 ) {
@@ -39,6 +40,7 @@ fun RecipeDetailScreen(
 
         AppTheme(
             darkTheme = isDarkTheme,
+            isNetworkAvailable = isNetworkAvailable,
             displayProgressBar = loading,
             scaffoldState = scaffoldState,
             dialogQueue = dialogQueue.queue.value,

@@ -11,6 +11,7 @@ import com.example.foodrecipes.interactors.recipe_list.RestoreRecipes
 import com.example.foodrecipes.interactors.recipe_list.SearchRecipes
 import com.example.foodrecipes.presentation.ui.recipe_list.RecipeListEvent.*
 import com.example.foodrecipes.presentation.ui.util.DialogQueue
+import com.example.foodrecipes.presentation.util.ConnectivityManager
 import com.example.foodrecipes.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -31,6 +32,7 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel @Inject constructor(
     private val searchRecipes: SearchRecipes,
     private val restoreRecipes: RestoreRecipes,
+    private val connectivityManager: ConnectivityManager,
     @Named("auth_token") private val token: String,
     private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
@@ -118,7 +120,8 @@ class RecipeListViewModel @Inject constructor(
         searchRecipes.execute(
             token = token,
             page = page.value,
-            query = query.value
+            query = query.value,
+            isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
         ).onEach { dataState ->
 
             loading.value = dataState.loading
@@ -145,7 +148,8 @@ class RecipeListViewModel @Inject constructor(
                 searchRecipes.execute(
                     token = token,
                     page = page.value,
-                    query = query.value
+                    query = query.value,
+                    isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
                 ).onEach { dataState ->
 
                     loading.value = dataState.loading
