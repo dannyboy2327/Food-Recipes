@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'de.mannodermaus.android-junit5'
 }
 
 android {
@@ -92,4 +93,12 @@ dependencies {
     // DataStore
     implementation "androidx.datastore:datastore:1.0.0-alpha08"
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha08"
+
+    // Unit Testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+
+    // MockWebServer
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.1")
 }
