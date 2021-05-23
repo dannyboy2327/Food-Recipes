@@ -1,10 +1,6 @@
 # :hamburger:Food Recipes:pizza:
 Food Recipes is an android application that will allow users to browse a variety of recipes.
 
-<p align="center">
-  <img src="images/ic_launcher.png" width="225" />
-</p>
-
 This application includes:
 - Search bar to find a specific recipe:heavy_check_mark:
 - Option to view a recipes details:heavy_check_mark:
